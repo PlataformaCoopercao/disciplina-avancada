@@ -1,9 +1,9 @@
 import urllib.request
 import json
 import random
+from settings import API_KEY
 
 endpoint = 'https://maps.googleapis.com/maps/api/distancematrix/json?'
-API_KEY = "AIzaSyAPQdJ9fQrH3rs9xyEu5YvaevvdqLUfmBM"
 
 
 def get_duration(origin, destination):
