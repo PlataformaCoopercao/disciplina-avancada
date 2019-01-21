@@ -28,8 +28,13 @@ def route_duration(route):
     return duration
 
 
-def random_hillclimbing_final(route, opt_limit, opt=1):
-    old_duration = route_duration(route)
+def random_hillclimbing_final(route, opt_limit, opt=1, best_duration=None):
+
+    if best_duration is None:
+        old_duration = route_duration(route)
+    else:
+        old_duration = best_duration
+
     if opt <= opt_limit:
         new_route = []
         old_route = route.copy()
@@ -38,17 +43,21 @@ def random_hillclimbing_final(route, opt_limit, opt=1):
             random_place = random.choice(old_route)
             new_route.append(random_place)
             old_route.remove(random_place)
-        new_duration = route_duration(new_route)    
-        if new_duration < old_duration:
-            return random_hillclimbing_final(new_route, opt_limit, opt=opt+1)
+        if new_route != route:
+            new_duration = route_duration(new_route)
+            if new_duration < old_duration:
+                return random_hillclimbing_final(new_route, opt_limit,
+                                                    opt=opt+1,
+                                                    best_duration=new_duration)
         else:
-            return random_hillclimbing_final(route, opt_limit, opt=opt+1)
+            return random_hillclimbing_final(route, opt_limit, opt=opt+1,
+                                                best_duration=old_duration)
     return (route, old_duration)
 
 
 route2 = ['place_id:EkFSLiBTZWJhc3Rpw6NvIEFsdmVzIC0gVGFtYXJpbmVpcmEsIFJl'
           'Y2lmZSAtIFBFLCA1MjE3MS0wMTEsIEJyYXppbCIuKiwKFAoSCT-irK5UGKsHE'
-          'T0hwYvgieVWEhQKEglbeb7xUxirBxHO7QZDwtgYgw', 
+          'T0hwYvgieVWEhQKEglbeb7xUxirBxHO7QZDwtgYgw',
           'place_id:ChIJISx9OooZqwcRLokhmDAdQBc',
           'place_id:ChIJvYBhVKoZqwcR_MfIpzZMLKs']
 
