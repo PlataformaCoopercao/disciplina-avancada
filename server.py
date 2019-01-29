@@ -1,26 +1,23 @@
-from flask import Flask, request
+from flask import Flask, jsonify, request
 from flask_restful import Resource, Api
-from nodes import Node, random_hillclimbing_final
+from maps import random_hillclimbing_final
+from settings import API_KEY
+# from nodes import Node, random_hillclimbing_final
 
 app = Flask(__name__)
 api = Api(app)
 
-todos = {}
-
 
 class Optimizer(Resource):
     def get(self):
-        return {todo_id: todos[todo_id]}
+        return
 
     def put(self):
         data = request.form['route']
-        list_route = list(data[1:-1].split(','))
-        route = [Node(*node.strip().split()) for node in list_route]
-        new_route = random_hillclimbing_final(route, opt_limit=18)
-        # route = [Node(node.strip().split()) for node in list(route[1::1].split(','))]
-        # print(route)
-        # route = [Node(node) for node in route]
-        return str(new_route)
+        list_route = data[1:-1].split(',')
+        route = list_route
+        new_route = random_hillclimbing_final(route, opt_limit=3, key=API_KEY)
+        return jsonify(route=str(new_route))
 
 
 api.add_resource(Optimizer, '/')
@@ -28,5 +25,5 @@ api.add_resource(Optimizer, '/')
 if __name__ == '__main__':
     app.run(debug=True)
 
-# put('http://localhost:5000/',
-#     data={'route': '[48 99, 16 32, 21 74, 40 9]'}).json()
+# put('http://localhost:5000/', data={'route': '[48 99, 16 32, 21 74, 40 9]'}).json()
+# put('http://localhost:5000/', data={'route': "[place_id:EjFQcmHDp2EgUmlvIEJyYW5jbyAtIFJlY2lmZSwgUEUsIDUyMTcxLTAxMSwgQnJhemlsIi4qLAoUChIJPRgmj6QYqwcRjfmoe7K_nmoSFAoSCV-IZaWiGKsHEbeEm1dSDiuA,place_id:ChIJZVvB3KYfqwcR-T7Po_gXFgY,place_id:ChIJlTXqY8kfqwcRD-si4uv7Sc4]"}).json()
